@@ -14,9 +14,4 @@ if echo "$CHANGED" | grep -qE "\.(java|sql)$"; then
   echo "$SERVICE_NAME changed — updating SYSTEM.md..."
   cd ..
   bash togomovie-docs/scripts/update-system-doc.sh
-
-  cd togomovie-docs
-  git add SYSTEM.md
-  git commit -m "docs: auto-update SYSTEM.md after $SERVICE_NAME change [skip ci]"
-  cd ..
 fi
