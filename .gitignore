@@ -1,0 +1,9 @@
+target/
+*.class
+*.jar
+.idea/
+*.iml
+.mvn/
+.env
+.env.local
+*.log

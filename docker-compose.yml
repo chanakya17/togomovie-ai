@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  togomovie-ai:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      BACKEND_URL: http://host.docker.internal:8080
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-changeme-dev-key}
+    depends_on:
+      ai-db:
+        condition: service_healthy
+
+  ai-db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: togomovie_ai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ai_pgdata:
