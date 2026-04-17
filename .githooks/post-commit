@@ -1,0 +1,22 @@
+#!/bin/bash
+# togomovie-ai post-commit hook
+# Regenerates SYSTEM.md and commits it to togomovie-docs when Java files change.
+
+CHANGED=$(git diff-tree --no-commit-id -r --name-only HEAD)
+COMMIT_MSG=$(git log -1 --pretty=%B)
+
+if echo "$COMMIT_MSG" | grep -q "\[skip ci\]"; then
+  exit 0
+fi
+
+if echo "$CHANGED" | grep -qE "\.(java|sql)$"; then
+  SERVICE_NAME=$(basename "$(pwd)")
+  echo "$SERVICE_NAME changed — updating SYSTEM.md..."
+  cd ..
+  bash togomovie-docs/scripts/update-system-doc.sh
+
+  cd togomovie-docs
+  git add SYSTEM.md
+  git commit -m "docs: auto-update SYSTEM.md after $SERVICE_NAME change [skip ci]"
+  cd ..
+fi
