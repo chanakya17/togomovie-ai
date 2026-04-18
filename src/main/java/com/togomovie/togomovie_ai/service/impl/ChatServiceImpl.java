@@ -8,7 +8,7 @@ import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Schedulers;
+
 
 @Slf4j
 @Service
@@ -32,7 +32,7 @@ public class ChatServiceImpl implements ChatService {
 
         return chatClient.prompt()
                 .user(message)
-                .advisors(new MessageChatMemoryAdvisor(chatMemory, convId, 20, Schedulers.boundedElastic()))
+                .advisors(MessageChatMemoryAdvisor.builder(chatMemory).conversationId(convId).build())
                 .tools(movieTools)
                 .stream()
                 .content();
