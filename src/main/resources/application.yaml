@@ -19,6 +19,7 @@ spring:
   flyway:
     locations: classpath:db/migration
     table: flyway_schema_history_ai
+    baseline-on-migrate: true
 
   cache:
     type: simple
